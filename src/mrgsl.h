@@ -6,11 +6,14 @@
  */
 #ifndef MRGSL_MRGSL_H_
 #define MRGSL_MRGSL_H_
-#include <mrbconf.h>
-#include <mruby.h>
-#include <mruby/class.h>
-#include <SDL2/SDL.h>
+
 #include <GL/gl.h>
+#include <mruby.h>
+#include <mruby/value.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_video.h>
 
 extern struct mrb_data_type const mrbal_bitmap_data_type;
 extern struct mrb_data_type const mrbal_viewport_data_type;

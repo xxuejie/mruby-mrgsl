@@ -1,9 +1,9 @@
 #include <mruby.h>
 #include <mruby/value.h>
-
+#include "tools.h"
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_mouse.h>
-#include "tools.h"
+
 static mrb_int mouse_x, mouse_y;
 
 static mrb_value
@@ -17,7 +17,7 @@ mouse_update (mrb_state *mrb, mrb_int capa)
 static mrb_value
 mouse_position (mrb_state *mrb, mrb_int capa)
 {
-  return mrb_new_instance (mrb, "Point", 2, mouse_x, mouse_y);
+  return mrb_new_instance (mrb, "Point", 2, mrb_fixnum_value(mouse_x), mrb_fixnum_value(mouse_y));
 }
 
 static mrb_value
