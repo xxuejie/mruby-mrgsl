@@ -14,16 +14,16 @@ void
 mrb_attr_reader (mrb_state* mrb, struct RClass* type, const char* varname);
 
 void
-mrb_attr_writer (mrb_state* mrb,struct RClass* type, const char* varname);
+mrb_attr_writer (mrb_state* mrb, struct RClass* type, const char* varname);
 
 void
-mrb_attr_accessor (mrb_state* mrb,struct RClass* type, const char* varname);
+mrb_attr_accessor (mrb_state* mrb, struct RClass* type, const char* varname);
 
 void
 mrb_set_gv (mrb_state* mrb, const char *name, mrb_value val);
 
 void
-mrb_set_iv (mrb_state* mrb,mrb_value object, const char *name, mrb_value val);
+mrb_set_iv (mrb_state* mrb, mrb_value object, const char *name, mrb_value val);
 
 mrb_value
 mrb_get_gv (mrb_state* mrb, const char *name);
@@ -40,8 +40,11 @@ mrb_new_instance (mrb_state* mrb, const char* class, mrb_int argc, ...);
 mrb_bool
 mrb_is_a (mrb_state* mrb, mrb_value object, const char* classname);
 
+mrb_value
+get_graphics_viewport (mrb_state* mrb);
+
 void
-mrgsl_viewport_remove_child (mrb_state* mrb,mrb_value parent, mrb_value child);
+mrgsl_viewport_remove_child (mrb_state* mrb, mrb_value parent, mrb_value child);
 
 void
 mrgsl_viewport_add_child (mrb_value parent, mrb_value child);

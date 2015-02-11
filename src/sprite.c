@@ -21,9 +21,9 @@ initialize (mrb_state *mrb, mrb_value self)
     }
   else
     {
-      mrb_set_iv (mrb, self, "@parent", mrb_get_gv(mrb, "$viewport"));
+      mrb_set_iv (mrb, self, "@parent", get_graphics_viewport(mrb));
 
-      mrgsl_viewport_add_child (mrb_get_gv(mrb, "$viewport"), self);
+      mrgsl_viewport_add_child (get_graphics_viewport(mrb), self);
     }
   mrb_set_iv (mrb, self, "@rect", mrb_new_instance (mrb, "Rect", 0, NULL));
   mrb_set_iv (mrb, self, "@bitmap", mrb_nil_value ());
@@ -37,8 +37,7 @@ initialize (mrb_state *mrb, mrb_value self)
 void
 mruby_mrgsl_sprite_init (mrb_state *mrb)
 {
-  struct RClass *mrgsl = mrb_module_get (mrb, "MRGSL");
-  struct RClass *type = mrb_define_class_under (mrb, mrgsl, "Sprite", mrb->object_class);
+  struct RClass *type = mrb_define_class_under (mrb, mruby_get_mrgsl(mrb), "Sprite", mrb->object_class);
   mrb_define_method (mrb, type, "initialize", (mrb_func_t) initialize, MRB_ARGS_OPT(1));
   mrb_attr_accessor (mrb, type, "rect");
   mrb_attr_accessor (mrb, type, "visible");

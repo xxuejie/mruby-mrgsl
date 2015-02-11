@@ -56,7 +56,7 @@ update_window (mrb_state* mrb)
   else
     {
 
-      mrgsl_draw_viewport(mrb, mrb_get_gv(mrb, "$viewport"));
+      mrgsl_draw_viewport(mrb, get_graphics_viewport(mrb));
       glFlush ();
       SDL_GL_SwapWindow (screen.window);
     }

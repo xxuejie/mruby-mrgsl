@@ -124,8 +124,7 @@ void
 mruby_mrgsl_keyboard_init (mrb_state *mrb)
 {
   struct RClass *hw;
-  struct RClass *mrgsl = mrb_module_get(mrb, "MRGSL");
-  hw = mrb_define_module_under(mrb, mrgsl,"Keyboard");
+  hw = mrb_define_module_under(mrb, mruby_get_mrgsl(mrb),"Keyboard");
   // Defino Metodos de acceso a RGBA
   mrb_define_class_method (mrb, hw, "update", (mrb_func_t) mrb_mrgsl_input_update, MRB_ARGS_NONE());
   mrb_define_class_method (mrb, hw, "trigger?", (mrb_func_t) mrb_mrgsl_input_trigger, MRB_ARGS_REQ(1));

@@ -167,6 +167,11 @@ mrgsl_draw_viewport (mrb_state* mrb, mrb_value viewport)
     }
 }
 
+mrb_value get_graphics_viewport(mrb_state* mrb ){
+  mrb_value graphics =mrb_obj_value(mrb_module_get_under(mrb, mruby_get_mrgsl(mrb), "Graphics"));
+  return mrb_get_iv(mrb, graphics,"@viewport");
+}
+
 void
 mrgsl_draw_sprite (mrb_state* mrb, mrb_value sprite)
 {

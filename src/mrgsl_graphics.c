@@ -10,6 +10,9 @@
 #include <mruby/data.h>
 #include <mruby/class.h>
 #include <mruby/string.h>
+#include <mruby/value.h>
+
+static struct RClass* graphics;
 
 static mrb_value
 show (mrb_state* mrb, mrb_value self)
@@ -37,8 +40,8 @@ show (mrb_state* mrb, mrb_value self)
     {
       mrb_raise (mrb, E_ARGUMENT_ERROR, SDL_GetError ());
     }
-  rect =  mrb_new_instance (mrb, "Rect", 4, mrb_fixnum_value (0), mrb_fixnum_value (0), mrb_fixnum_value (screenWidth), mrb_fixnum_value (screenHeight));
-  mrb_set_gv(mrb, "$viewport", mrb_new_instance (mrb, "Viewport", 1, rect));
+  rect = mrb_new_instance (mrb, "Rect", 4, mrb_fixnum_value (0), mrb_fixnum_value (0), mrb_fixnum_value (screenWidth), mrb_fixnum_value (screenHeight));
+  mrb_set_iv (mrb, mrb_obj_value (graphics), "@viewport", mrb_new_instance (mrb, "Viewport", 1, rect));
   return mrb_nil_value ();
 }
 
@@ -49,11 +52,18 @@ update (mrb_state *mrb, mrb_value self)
   return mrb_nil_value ();
 }
 
+mrb_value
+get_viewport (mrb_state* mrb, mrb_value self)
+{
+  return get_graphics_viewport (mrb);
+}
+
 void
 mruby_mrgsl_graphics_init (mrb_state *mrb)
 {
-  struct RClass *mrgsl = mrb_module_get (mrb, "MRGSL");
-  struct RClass *type = mrb_define_module_under (mrb, mrgsl, "Graphics");
-  mrb_define_class_method (mrb, type, "show", (mrb_func_t) show, MRB_ARGS_REQ(2) | MRB_ARGS_OPT(1));
-  mrb_define_class_method (mrb, type, "update", (mrb_func_t) update, MRB_ARGS_NONE());
+  //struct RClass *type = mrb_define_module_under (mrb, mrgsl, "Graphics");
+  graphics = mrb_define_module_under (mrb, mruby_get_mrgsl (mrb), "Graphics");
+  mrb_define_class_method (mrb, graphics, "show", (mrb_func_t) show, MRB_ARGS_REQ(2) | MRB_ARGS_OPT(1));
+  mrb_define_class_method (mrb, graphics, "update", (mrb_func_t) update, MRB_ARGS_NONE());
+  mrb_define_class_method (mrb, graphics, "viewport", (mrb_func_t)get_viewport, MRB_ARGS_NONE ());
 }

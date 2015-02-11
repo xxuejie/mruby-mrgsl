@@ -8,6 +8,7 @@
 #define MRGSL_MRGSL_H_
 #include <mrbconf.h>
 #include <mruby.h>
+#include <mruby/class.h>
 #include <SDL2/SDL.h>
 #include <GL/gl.h>
 
@@ -31,6 +32,10 @@ typedef struct
 } mrgsl_viewport;
 
 void
+mruby_mrgsl_init (mrb_state *mrb);
+struct RClass*
+mruby_get_mrgsl (mrb_state *mrb);
+void
 mruby_mrgsl_point_init (mrb_state *mrb);
 void
 mruby_mrgsl_rect_init (mrb_state *mrb);
@@ -44,6 +49,8 @@ void
 mruby_mrgsl_viewport_init (mrb_state *mrb);
 void
 mruby_mrgsl_keyboard_init (mrb_state *mrb);
+void
+mruby_mrgsl_mouse_init (mrb_state* mrb);
 void
 mruby_mrgsl_graphics_init (mrb_state *mrb);
 void

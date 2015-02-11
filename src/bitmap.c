@@ -69,8 +69,7 @@ initialize (mrb_state *mrb, mrb_value self)
 void
 mruby_mrgsl_bitmap_init (mrb_state *mrb)
 {
-  struct RClass *mrgsl = mrb_define_module (mrb, "MRGSL");
-  struct RClass *type = mrb_define_class_under(mrb,mrgsl  ,"Bitmap", mrb->object_class);
+  struct RClass *type = mrb_define_class_under(mrb,mruby_get_mrgsl(mrb)  ,"Bitmap", mrb->object_class);
   MRB_SET_INSTANCE_TT(type, MRB_TT_DATA);
   mrb_define_method (mrb, type, "initialize", (mrb_func_t) initialize, MRB_ARGS_REQ (1) | MRB_ARGS_OPT(1));
   mrb_attr_reader (mrb, type, "width");

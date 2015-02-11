@@ -40,12 +40,9 @@ initialize (mrb_state *mrb, mrb_value self)
       mrb_set_iv (mrb, self, "@parent", mrb_nil_value ());
       mrb_set_iv (mrb, self, "@visible", mrb_true_value ());
       mrb_set_iv (mrb, self, "@z", mrb_fixnum_value (0));
-      struct RClass *mrgsl = mrb_module_get (mrb, "MRGSL");
-      mrb_value objclass = mrb_obj_value (mrgsl);
-      mrb_value graph_view = mrb_get_iv(mrb, objclass, "@viewport");
-      if (!mrb_is_equals (mrb, graph_view, mrb_nil_value ()))
+      if (!mrb_is_equals (mrb, get_graphics_viewport(mrb), mrb_nil_value ()))
 	{
-	  mrgsl_viewport_add_child (graph_view, self);
+	  mrgsl_viewport_add_child (get_graphics_viewport(mrb), self);
 	}
     }
   else if (count == 2 && mrb_is_a (mrb, parent, "Viewport"))
@@ -68,8 +65,7 @@ initialize (mrb_state *mrb, mrb_value self)
 void
 mruby_mrgsl_viewport_init (mrb_state *mrb)
 {
-  struct RClass *mrgsl = mrb_module_get(mrb, "MRGSL");
-  struct RClass *type = mrb_define_class_under (mrb, mrgsl, "Viewport", mrb->object_class);
+  struct RClass *type = mrb_define_class_under (mrb, mruby_get_mrgsl(mrb), "Viewport", mrb->object_class);
   MRB_SET_INSTANCE_TT(type, MRB_TT_DATA);
   mrb_define_method (mrb, type, "initialize", (mrb_func_t) initialize, MRB_ARGS_OPT(3));
   mrb_attr_accessor (mrb, type, "rect");
