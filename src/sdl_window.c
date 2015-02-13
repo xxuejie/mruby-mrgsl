@@ -51,6 +51,7 @@ update_window (mrb_state* mrb)
   if (screen.event.type == SDL_QUIT)
     {
       SDL_DestroyWindow (screen.window);
+      mrb_set_gv(mrb, "$running", mrb_false_value());
       SDL_Quit ();
     }
   else

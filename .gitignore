@@ -46,3 +46,4 @@ Temporary Items
 *.cproject
 src/.settings/language.settings.xml
 *.prefs
+dependencies/

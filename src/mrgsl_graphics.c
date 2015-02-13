@@ -42,6 +42,7 @@ show (mrb_state* mrb, mrb_value self)
     }
   rect = mrb_new_instance (mrb, "Rect", 4, mrb_fixnum_value (0), mrb_fixnum_value (0), mrb_fixnum_value (screenWidth), mrb_fixnum_value (screenHeight));
   mrb_set_iv (mrb, mrb_obj_value (graphics), "@viewport", mrb_new_instance (mrb, "Viewport", 1, rect));
+  mrb_set_gv(mrb, "$running", mrb_true_value());
   return mrb_nil_value ();
 }
 
