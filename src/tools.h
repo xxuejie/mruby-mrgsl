@@ -54,5 +54,14 @@ mrgsl_draw_viewport (mrb_state* mrb, mrb_value viewport);
 
 void
 mrgsl_draw_sprite (mrb_state* mrb, mrb_value sprite);
+
+Uint32
+sdl_bitmap_getpixel (SDL_Surface *surface, int x, int y);
+
+void
+sdl_bitmap_setpixel (SDL_Surface *surface, int x, int y, Uint32 pixel);
+
+void
+sdl_bitmap_fillrect (SDL_Surface *surface, int x, int y, int width, int height, Uint32 pixel);
 #endif /* MRUBY_TOOLS_H_ */
 
