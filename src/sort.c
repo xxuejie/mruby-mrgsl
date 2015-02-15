@@ -40,7 +40,7 @@
 static inline char      *med3(char *, char *, char *, cmp_t *, void *);
 static inline void       swapfunc(char *, char *, int, int);
 
-#define min(a, b)       (a) < (b) ? a : b
+//  #define min(a, b)       (a) < (b) ? a : b
 
 /*
  * Qsort routine from Bentley & McIlroy's "Engineering a Sort Function".

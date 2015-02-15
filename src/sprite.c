@@ -40,7 +40,6 @@ set_z(mrb_state* mrb, mrb_value self){
   mrb_get_args(mrb, "i", &z);
   mrb_set_iv(mrb, self, "@z", mrb_fixnum_value(z));
   mrb_value parent = mrb_get_iv(mrb, self, "@parent");
-  mrb_value arry = mrb_get_iv (mrb, parent, "children");
   mrb_set_iv (mrb, parent, "sorted?", mrb_false_value());
   return self;
 }
