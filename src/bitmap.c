@@ -32,7 +32,7 @@ initialize (mrb_state *mrb, mrb_value self)
   mrb_int h;
   mrb_int w;
   int count;
-  count = mrb_get_args (mrb, "o|i", &first, &height);
+  count = mrb_get_args (mrb, "o|o", &first, &height);
   switch (count)
     {
     case 1:
@@ -52,7 +52,6 @@ initialize (mrb_state *mrb, mrb_value self)
       w = mrb_int(mrb, first);
       bitmap->surface = create_surface (w, h);
       bitmap->texture = surface_texture (bitmap->surface);
-
       break;
     default:
       mrb_raise (mrb, E_ARGUMENT_ERROR, "Wrong number of arguments");

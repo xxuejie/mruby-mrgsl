@@ -184,5 +184,4 @@ sdl_bitmap_fillrect (SDL_Surface *surface, int x, int y, int width, int height, 
   srcrect.w = width;
   srcrect.h = height;
   result = SDL_FillRect(surface, &srcrect, pixel);
-  printf("%i", result);
 }

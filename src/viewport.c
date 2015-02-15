@@ -30,19 +30,20 @@ initialize (mrb_state *mrb, mrb_value self)
   mrb_value rect;
   mrb_value parent;
   int count = mrb_get_args (mrb, "o|o", &rect, &parent);
-  mrgsl_viewport *viewport = (mrgsl_viewport*) malloc (sizeof(mrgsl_viewport));
-  viewport->size = 0;
-  viewport->capacity = 1;
-  viewport->children = malloc (sizeof(mrb_value) * viewport->capacity);
+//  mrgsl_viewport *viewport = (mrgsl_viewport*) malloc (sizeof(mrgsl_viewport));
+//  viewport->size = 0;
+//  viewport->capacity = 3;
+//  viewport->children = malloc (sizeof(mrb_value) * viewport->capacity);
   if (count == 1)
     {
       mrb_set_iv (mrb, self, "@rect", rect);
       mrb_set_iv (mrb, self, "@parent", mrb_nil_value ());
       mrb_set_iv (mrb, self, "@visible", mrb_true_value ());
       mrb_set_iv (mrb, self, "@z", mrb_fixnum_value (0));
+      mrb_set_iv (mrb, self, "children", mrb_ary_new(mrb));
       if (!mrb_is_equals (mrb, get_graphics_viewport(mrb), mrb_nil_value ()))
 	{
-	  mrgsl_viewport_add_child (get_graphics_viewport(mrb), self);
+	  mrgsl_viewport_add_child (mrb, get_graphics_viewport(mrb), self);
 	}
     }
   else if (count == 2 && mrb_is_a (mrb, parent, "Viewport"))
@@ -51,14 +52,13 @@ initialize (mrb_state *mrb, mrb_value self)
       mrb_set_iv (mrb, self, "@parent", parent);
       mrb_set_iv (mrb, self, "@visible", mrb_true_value ());
       mrb_set_iv (mrb, self, "@z", mrb_fixnum_value (0));
-      mrgsl_viewport_add_child (parent, self);
+      mrb_set_iv (mrb, self, "sorted?", mrb_true_value ());
+      mrgsl_viewport_add_child (mrb, parent, self);
     }
   else
     {
       mrb_raise (mrb, E_ARGUMENT_ERROR, "Wrong number of arguments");
     }
-  DATA_TYPE (self) = &mrbal_viewport_data_type;
-  DATA_PTR (self) = viewport;
   return self;
 }
 

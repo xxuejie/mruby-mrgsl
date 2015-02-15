@@ -13,6 +13,8 @@
 #include <mruby/variable.h>
 #include <mruby/data.h>
 #include <mruby/numeric.h>
+#include <mruby/array.h>
+#include "sort.c"
 
 void
 mrb_attr_reader (mrb_state* mrb, struct RClass* type, const char* varname)
@@ -56,7 +58,6 @@ mrb_get_gv (mrb_state* mrb, const char *name)
   return mrb_gv_get (mrb, mrb_intern_static (mrb, name, strlen (name)));
 }
 
-
 void
 mrb_set_iv (mrb_state* mrb, mrb_value object, const char *name, mrb_value val)
 {
@@ -78,8 +79,8 @@ mrb_is_equals (mrb_state* mrb, mrb_value object, mrb_value other)
 mrb_bool
 mrb_is_a (mrb_state* mrb, mrb_value object, const char* classname)
 {
-  struct RClass* mrgsl = mrb_module_get(mrb, "MRGSL");
-  struct RClass* class = mrb_class_get_under (mrb,mrgsl ,classname);
+  struct RClass* mrgsl = mrb_module_get (mrb, "MRGSL");
+  struct RClass* class = mrb_class_get_under (mrb, mrgsl, classname);
   return mrb_obj_is_instance_of (mrb, object, class);
 }
 
@@ -106,26 +107,54 @@ mrb_new_instance (mrb_state* mrb, const char* class, mrb_int argc, ...)
     {
       params = NULL;
     }
-  mrgsl = mrb_module_get(mrb, "MRGSL");
-  type = mrb_class_get_under(mrb, mrgsl,class);
+  mrgsl = mrb_module_get (mrb, "MRGSL");
+  type = mrb_class_get_under (mrb, mrgsl, class);
   return mrb_obj_new (mrb, type, argc, params);
 }
 
-void
-mrgsl_viewport_add_child (mrb_value parent, mrb_value child)
+static
+int
+zcompare (void* param, const void * a, const void * b)
 {
+  mrb_value f;
+  mrb_value s;
+  mrb_int fz;
+  mrb_int sz;
+  mrb_state* mrb = (mrb_state*)param;
+  f = *(mrb_value*) a;
+  s = *(mrb_value*) b;
+  fz = mrb_int(mrb, mrb_get_iv (mrb, f, "@z"));
+  sz = mrb_int(mrb, mrb_get_iv (mrb, s, "@z"));
 
-  mrgsl_viewport* viewport = (mrgsl_viewport*) DATA_PTR(parent);
-  if (viewport->size >= viewport->capacity)
+  if (fz > sz)
     {
-      viewport->capacity = viewport->capacity * 2 + 1;
-      viewport->children = realloc (viewport->children, sizeof(mrb_value*) * viewport->capacity);
+      return 1;
     }
-
-  viewport->children[viewport->size] = child;
-  viewport->size += 1;
-  //TODO SORT
+  else if (fz < sz)
+    {
+      return -1;
+    }
+  else
+    {
+      return 0;
+    }
 }
+
+void
+mrgsl_sort_viewport_children (mrb_state* mrb,mrb_value arry){
+  struct RArray* anArray = mrb_ary_ptr(arry);
+  qsort_r (anArray->ptr, anArray->len, sizeof(mrb_value), mrb, zcompare);
+}
+
+void
+mrgsl_viewport_add_child (mrb_state* mrb, mrb_value parent, mrb_value child)
+{
+  mrb_value arry = mrb_get_iv (mrb, parent, "children");
+  mrb_ary_push (mrb, arry, child);
+  mrb_set_iv (mrb, parent, "sorted?", mrb_false_value());
+}
+
+
 
 void
 mrgsl_viewport_remove_child (mrb_state* mrb, mrb_value parent, mrb_value child)
@@ -148,10 +177,14 @@ mrgsl_viewport_remove_child (mrb_state* mrb, mrb_value parent, mrb_value child)
 void
 mrgsl_draw_viewport (mrb_state* mrb, mrb_value viewport)
 {
-  mrgsl_viewport* struc = DATA_PTR(viewport);
-  for (int i = 0; i < struc->size; i++)
+  mrb_value arry = mrb_get_iv (mrb, viewport, "children");
+  mrb_value sorted = mrb_get_iv(mrb, viewport, "sorted?");
+  if(mrb_is_equals(mrb, sorted, mrb_false_value())){
+      mrgsl_sort_viewport_children(mrb, arry);
+  }
+  for (int i = 0; i < mrb_ary_len (mrb, arry); i++)
     {
-      mrb_value child = struc->children[i];
+      mrb_value child = mrb_ary_entry (arry, i);
       mrb_value visible = mrb_get_iv (mrb, child, "@visible");
       if (mrb_is_equals (mrb, visible, mrb_true_value ()))
 	{
@@ -167,17 +200,17 @@ mrgsl_draw_viewport (mrb_state* mrb, mrb_value viewport)
     }
 }
 
-mrb_value get_graphics_viewport(mrb_state* mrb ){
-  mrb_value graphics =mrb_obj_value(mrb_module_get_under(mrb, mruby_get_mrgsl(mrb), "Graphics"));
-  return mrb_get_iv(mrb, graphics,"@viewport");
+mrb_value
+get_graphics_viewport (mrb_state* mrb)
+{
+  mrb_value graphics = mrb_obj_value (mrb_module_get_under (mrb, mruby_get_mrgsl (mrb), "Graphics"));
+  return mrb_get_iv (mrb, graphics, "@viewport");
 }
 
 void
 mrgsl_draw_sprite (mrb_state* mrb, mrb_value sprite)
 {
   mrb_value rect;
-  mrb_value mrb_bitmap = mrb_get_iv (mrb, sprite, "@bitmap");
-  mrgsl_bitmap* bitmap = (mrgsl_bitmap*) DATA_PTR(mrb_bitmap);
   mrb_int rect_x;
   mrb_int rect_y;
   mrb_int rect_w;
@@ -192,6 +225,14 @@ mrgsl_draw_sprite (mrb_state* mrb, mrb_value sprite)
   float ry;
   float rw;
   float rh;
+  mrgsl_bitmap* bitmap;
+  mrb_value mrb_bitmap = mrb_get_iv (mrb, sprite, "@bitmap");
+
+  if (mrb_is_equals (mrb, mrb_bitmap, mrb_nil_value ()))
+    {
+      return;
+    }
+  bitmap = (mrgsl_bitmap*) DATA_PTR(mrb_bitmap);
   if (bitmap == NULL)
     {
       return;
@@ -208,23 +249,23 @@ mrgsl_draw_sprite (mrb_state* mrb, mrb_value sprite)
   /*
    * rect values
    */
-  rect_x = mrb_int(mrb, mrb_get_iv (mrb,rect, "@x"));
-  rect_y = mrb_int(mrb, mrb_get_iv (mrb,rect, "@y"));
-  rect_w = mrb_int(mrb,  mrb_get_iv (mrb,rect, "@width"));
-  rect_h = mrb_int(mrb, mrb_get_iv (mrb,rect, "@height"));
+  rect_x = mrb_int(mrb, mrb_get_iv (mrb, rect, "@x"));
+  rect_y = mrb_int(mrb, mrb_get_iv (mrb, rect, "@y"));
+  rect_w = mrb_int(mrb, mrb_get_iv (mrb, rect, "@width"));
+  rect_h = mrb_int(mrb, mrb_get_iv (mrb, rect, "@height"));
   /*
    * sprite values
    */
-  spr_x = mrb_int (mrb, mrb_get_iv (mrb,sprite, "@x"));
-  spr_y = mrb_int (mrb, mrb_get_iv (mrb, sprite, "@y"));
+  spr_x = mrb_int(mrb, mrb_get_iv (mrb, sprite, "@x"));
+  spr_y = mrb_int(mrb, mrb_get_iv (mrb, sprite, "@y"));
   /*
    * Parent value
    */
 
   parent = mrb_get_iv (mrb, sprite, "@parent");
   prect = mrb_get_iv (mrb, parent, "@rect");
-  view_x = mrb_int (mrb, mrb_get_iv (mrb, prect, "@x"));
-  view_y = mrb_int (mrb, mrb_get_iv (mrb, prect, "@y"));
+  view_x = mrb_int(mrb, mrb_get_iv (mrb, prect, "@x"));
+  view_y = mrb_int(mrb, mrb_get_iv (mrb, prect, "@y"));
 
   rx = rect_x / (float) bitmap->surface->w;
   ry = rect_y / (float) bitmap->surface->h;
