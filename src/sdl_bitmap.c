@@ -177,11 +177,10 @@ sdl_bitmap_setpixel (SDL_Surface *surface, int x, int y, Uint32 pixel)
 void
 sdl_bitmap_fillrect (SDL_Surface *surface, int x, int y, int width, int height, Uint32 pixel)
 {
-  int result;
   SDL_Rect srcrect;
   srcrect.x = x;
   srcrect.y = y;
   srcrect.w = width;
   srcrect.h = height;
-  result = SDL_FillRect(surface, &srcrect, pixel);
+  SDL_FillRect(surface, &srcrect, pixel);
 }
