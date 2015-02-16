@@ -31,8 +31,10 @@ initialize (mrb_state* mrb, mrb_value self)
   mrb_value fontname;
   mrb_int size;
   mrb_int count;
+  mrb_value zero = mrb_fixnum_value (0);
+  mrb_value full = mrb_fixnum_value (255);
   mrgsl_font* font = (mrgsl_font*) malloc (sizeof(mrgsl_font));
-  count = mrb_get_args (mrb, "o|i", &fontname);
+  count = mrb_get_args (mrb, "o|i", &fontname, &size);
   if (count == 1 && mrb_string_p(fontname))
     {
       name = mrb_string_value_ptr (mrb, fontname);
@@ -46,7 +48,7 @@ initialize (mrb_state* mrb, mrb_value self)
       mrb_set_iv (mrb, self, "@name", fontname);
       mrb_set_iv (mrb, self, "@size", mrb_fixnum_value (12));
     }
-  else if (count == 2 && &&mrb_string_p(fontname))
+  else if (count == 2 && mrb_string_p(fontname))
     {
       name = mrb_string_value_ptr (mrb, fontname);
       font->font = TTF_OpenFont (name, 12);
@@ -63,12 +65,11 @@ initialize (mrb_state* mrb, mrb_value self)
       mrb_raise (mrb, E_ARGUMENT_ERROR, "Wrong type of arguments");
       return mrb_nil_value ();
     }
-  mrb_value zero = mrb_fixnum_value(0);
-  mrb_value full = mrb_fixnum_value(255);
-  mrb_set_iv (mrb, self, "@color", mrb_new_instance(mrb, "Color", 4, zero, zero, zero, full));
-  mrb_set_iv (mrb, self, "@bold", mrb_false_value());
-  mrb_set_iv (mrb, self, "@italic", mrb_false_value());
-  mrb_set_iv (mrb, self, "@underline", mrb_false_value());
+
+  mrb_set_iv (mrb, self, "@color", mrb_new_instance (mrb, "Color", 4, zero, zero, zero, full));
+  mrb_set_iv (mrb, self, "@bold", mrb_false_value ());
+  mrb_set_iv (mrb, self, "@italic", mrb_false_value ());
+  mrb_set_iv (mrb, self, "@underline", mrb_false_value ());
   DATA_TYPE (self) = &mrbal_font_data_type;
   DATA_PTR (self) = font;
   return self;
