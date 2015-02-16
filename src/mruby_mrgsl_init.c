@@ -8,7 +8,6 @@ mrb_mrgsl_gem_init (mrb_state* mrb)
   mruby_mrgsl_init (mrb);
   mruby_mrgsl_bitmap_init (mrb);
   mruby_mrgsl_font_init(mrb);
-  mruby_mrgsl_textdecorator_init(mrb);
   mruby_mrgsl_viewport_init (mrb);
   mruby_mrgsl_sprite_init (mrb);
   mruby_mrgsl_graphics_init (mrb);

@@ -59,8 +59,6 @@ mruby_mrgsl_font_init (mrb_state *mrb);
 void
 mruby_mrgsl_sprite_init (mrb_state *mrb);
 void
-mruby_mrgsl_textdecorator_init(mrb_state *mrb);
-void
 mruby_mrgsl_sprite_init(mrb_state *mrb);
 void
 mruby_mrgsl_viewport_init (mrb_state *mrb);

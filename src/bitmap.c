@@ -154,6 +154,14 @@ mrb_bitmap_blit(mrb_state* mrb, mrb_value self){
   return self;
 }
 
+static mrb_value
+mrb_bitmap_dispose(mrb_state* mrb, mrb_value self){
+  mrgsl_bitmap* bitmap = DATA_PTR(self);
+  SDL_Surface* surface = bitmap->surface;
+  SDL_FreeSurface(surface);
+  return mrb_nil_value();
+}
+
 void
 mruby_mrgsl_bitmap_init (mrb_state *mrb)
 {
@@ -164,6 +172,7 @@ mruby_mrgsl_bitmap_init (mrb_state *mrb)
   mrb_define_method (mrb, type, "get_pixel", (mrb_func_t) mrb_bitmap_get_pixel, MRB_ARGS_REQ(2));
   mrb_define_method (mrb, type, "fill_rect", (mrb_func_t) mrb_bitmap_fill_rect, MRB_ARGS_REQ(2));
   mrb_define_method (mrb, type, "blt", (mrb_func_t) mrb_bitmap_blit, MRB_ARGS_REQ(3));
+  mrb_define_method (mrb, type, "dispose", (mrb_func_t) mrb_bitmap_dispose, MRB_ARGS_NONE());
   mrb_attr_reader (mrb, type, "width");
   mrb_attr_reader (mrb, type, "height");
 
