@@ -190,7 +190,6 @@ sdl_bitmap_fillrect (SDL_Surface *surface, int x, int y, int width, int height, 
 void
 sdl_bitmap_blit (mrb_state* mrb, mrb_value src_bitmap, mrb_value src_rect, mrb_value dest_bitmap, mrb_value dest_rect)
 {
-  printf("llego a intentar blitear");
   SDL_Rect src_r;
   SDL_Rect src_d;
   mrgsl_bitmap* src_bmp = DATA_PTR (src_bitmap);
