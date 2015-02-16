@@ -16,6 +16,9 @@ bitmap_free (mrb_state *mrb, void *p)
 {
   if (p)
     {
+      mrgsl_bitmap* bitmap = (mrgsl_bitmap*)p;
+      SDL_FreeSurface(bitmap->surface);
+      free(bitmap->texture);
       free (p);
     }
 }
