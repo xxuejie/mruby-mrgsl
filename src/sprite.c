@@ -20,6 +20,11 @@ initialize (mrb_state *mrb, mrb_value self)
   mrb_set_iv (mrb, self, "@x", mrb_fixnum_value (0));
   mrb_set_iv (mrb, self, "@y", mrb_fixnum_value (0));
   mrb_set_iv (mrb, self, "@z", mrb_fixnum_value (0));
+  mrb_set_iv (mrb, self, "@angle", mrb_fixnum_value (0));
+  mrb_set_iv (mrb, self, "@ox", mrb_fixnum_value (0));
+  mrb_set_iv (mrb, self, "@oy", mrb_fixnum_value (0));
+  mrb_set_iv (mrb, self, "@zoom_x", mrb_float_value (mrb, 1));
+  mrb_set_iv (mrb, self, "@zoom_y", mrb_float_value (mrb, 1));
   if (count == 1)
     {
       mrb_set_iv (mrb, self, "@parent", parent);
@@ -57,4 +62,12 @@ mruby_mrgsl_sprite_init (mrb_state *mrb)
   mrb_attr_accessor (mrb, type, "x");
   mrb_attr_accessor (mrb, type, "y");
   mrb_attr_reader (mrb, type, "z");
+  mrb_attr_accessor (mrb, type, "angle");
+  mrb_attr_accessor (mrb, type, "ox");
+  mrb_attr_accessor (mrb, type, "oy");
+  mrb_attr_accessor (mrb, type, "zoom_x");
+  mrb_attr_accessor (mrb, type, "zoom_y");
+
+
 }
+
