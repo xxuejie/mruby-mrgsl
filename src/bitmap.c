@@ -135,6 +135,18 @@ mrb_bitmap_fill_rect (mrb_state* mrb, mrb_value self)
   return self;
 }
 
+static mrb_value
+mrb_bitmap_blit(mrb_state* mrb, mrb_value self){
+  mrb_value src_rect;
+  mrb_value src_bitm;
+  mrb_value des_rect;
+  mrgsl_bitmap* bitmap = DATA_PTR(self);
+  mrb_get_args(mrb, "ooo", &src_bitm, &src_rect, &des_rect);
+  sdl_bitmap_blit(mrb, src_bitm, src_rect, self, des_rect);
+  bitmap->texture = surface_texture (bitmap->surface);
+  return self;
+}
+
 void
 mruby_mrgsl_bitmap_init (mrb_state *mrb)
 {
@@ -144,6 +156,7 @@ mruby_mrgsl_bitmap_init (mrb_state *mrb)
   mrb_define_method (mrb, type, "set_pixel", (mrb_func_t) mrb_bitmap_set_pixel, MRB_ARGS_REQ(3));
   mrb_define_method (mrb, type, "get_pixel", (mrb_func_t) mrb_bitmap_get_pixel, MRB_ARGS_REQ(2));
   mrb_define_method (mrb, type, "fill_rect", (mrb_func_t) mrb_bitmap_fill_rect, MRB_ARGS_REQ(2));
+  mrb_define_method (mrb, type, "blt", (mrb_func_t) mrb_bitmap_blit, MRB_ARGS_REQ(3));
   mrb_attr_reader (mrb, type, "width");
   mrb_attr_reader (mrb, type, "height");
 

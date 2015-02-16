@@ -30,10 +30,6 @@ initialize (mrb_state *mrb, mrb_value self)
   mrb_value rect;
   mrb_value parent;
   int count = mrb_get_args (mrb, "o|o", &rect, &parent);
-//  mrgsl_viewport *viewport = (mrgsl_viewport*) malloc (sizeof(mrgsl_viewport));
-//  viewport->size = 0;
-//  viewport->capacity = 3;
-//  viewport->children = malloc (sizeof(mrb_value) * viewport->capacity);
   if (count == 1)
     {
       mrb_set_iv (mrb, self, "@rect", rect);
@@ -41,6 +37,7 @@ initialize (mrb_state *mrb, mrb_value self)
       mrb_set_iv (mrb, self, "@visible", mrb_true_value ());
       mrb_set_iv (mrb, self, "@z", mrb_fixnum_value (0));
       mrb_set_iv (mrb, self, "children", mrb_ary_new(mrb));
+      mrb_set_iv (mrb, self, "sorted?", mrb_true_value ());
       if (!mrb_is_equals (mrb, get_graphics_viewport(mrb), mrb_nil_value ()))
 	{
 	  mrgsl_viewport_add_child (mrb, get_graphics_viewport(mrb), self);
@@ -52,6 +49,7 @@ initialize (mrb_state *mrb, mrb_value self)
       mrb_set_iv (mrb, self, "@parent", parent);
       mrb_set_iv (mrb, self, "@visible", mrb_true_value ());
       mrb_set_iv (mrb, self, "@z", mrb_fixnum_value (0));
+      mrb_set_iv (mrb, self, "children", mrb_ary_new(mrb));
       mrb_set_iv (mrb, self, "sorted?", mrb_true_value ());
       mrgsl_viewport_add_child (mrb, parent, self);
     }
@@ -66,8 +64,7 @@ void
 mruby_mrgsl_viewport_init (mrb_state *mrb)
 {
   struct RClass *type = mrb_define_class_under (mrb, mruby_get_mrgsl(mrb), "Viewport", mrb->object_class);
-  MRB_SET_INSTANCE_TT(type, MRB_TT_DATA);
-  mrb_define_method (mrb, type, "initialize", (mrb_func_t) initialize, MRB_ARGS_OPT(3));
+  mrb_define_method (mrb, type, "initialize", (mrb_func_t) initialize, MRB_ARGS_OPT(2));
   mrb_attr_accessor (mrb, type, "rect");
   mrb_attr_accessor (mrb, type, "visible");
   mrb_attr_accessor (mrb, type, "parent");

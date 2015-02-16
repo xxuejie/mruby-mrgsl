@@ -6,6 +6,7 @@
  */
 #include <stdlib.h>     /* malloc, free, rand */
 #include <mruby.h>
+#include <mruby/data.h>
 #include <SDL2/SDL_endian.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_pixels.h>
@@ -14,6 +15,7 @@
 #include <SDL2/SDL_opengl.h>
 #include <GL/gl.h>
 #include "mrgsl.h"
+#include "tools.h"
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 int rmask = 0xff000000;
@@ -182,5 +184,25 @@ sdl_bitmap_fillrect (SDL_Surface *surface, int x, int y, int width, int height, 
   srcrect.y = y;
   srcrect.w = width;
   srcrect.h = height;
-  SDL_FillRect(surface, &srcrect, pixel);
+  SDL_FillRect (surface, &srcrect, pixel);
+}
+
+void
+sdl_bitmap_blit (mrb_state* mrb, mrb_value src_bitmap, mrb_value src_rect, mrb_value dest_bitmap, mrb_value dest_rect)
+{
+  printf("llego a intentar blitear");
+  SDL_Rect src_r;
+  SDL_Rect src_d;
+  mrgsl_bitmap* src_bmp = DATA_PTR (src_bitmap);
+  mrgsl_bitmap* des_bmp = DATA_PTR (dest_bitmap);
+
+  src_r.x = mrb_int(mrb, mrb_get_iv (mrb, src_rect, "@x"));
+  src_r.y = mrb_int(mrb, mrb_get_iv (mrb, src_rect, "@y"));
+  src_r.w = mrb_int(mrb, mrb_get_iv (mrb, src_rect, "@width"));
+  src_r.h = mrb_int(mrb, mrb_get_iv (mrb, src_rect, "@height"));
+  src_d.x = mrb_int(mrb, mrb_get_iv (mrb, dest_rect, "@x"));
+  src_d.y = mrb_int(mrb, mrb_get_iv (mrb, dest_rect, "@y"));
+  src_d.w = mrb_int(mrb, mrb_get_iv (mrb, dest_rect, "@width"));
+  src_d.h = mrb_int(mrb, mrb_get_iv (mrb, dest_rect, "@height"));
+  SDL_BlitSurface(src_bmp->surface, &src_r, des_bmp->surface, &src_d);
 }

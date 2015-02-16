@@ -66,6 +66,9 @@ sdl_bitmap_setpixel (SDL_Surface *surface, int x, int y, Uint32 pixel);
 void
 sdl_bitmap_fillrect (SDL_Surface *surface, int x, int y, int width, int height, Uint32 pixel);
 
+void
+sdl_bitmap_blit (mrb_state* mrb, mrb_value src_bitmap, mrb_value src_rect, mrb_value dest_bitmap, mrb_value dest_rect);
+
 void qsort_r(void *a, size_t n, size_t es, void *thunk, cmp_t *cmp);
 
 void
