@@ -18,7 +18,6 @@ bitmap_free (mrb_state *mrb, void *p)
     {
       mrgsl_bitmap* bitmap = (mrgsl_bitmap*)p;
       SDL_FreeSurface(bitmap->surface);
-      free(bitmap->texture);
       free (p);
     }
 }
@@ -43,7 +42,8 @@ initialize (mrb_state *mrb, mrb_value self)
 	{
 	  const char *str = mrb_string_value_ptr (mrb, first);
 	  bitmap->surface = load_surface (str);
-	  if(bitmap->surface == NULL){
+	  if(!bitmap->surface){
+	      printf("TTF_OpenFont: %s\n", TTF_GetError());
 	      mrb_raise (mrb, E_ARGUMENT_ERROR, "Asset not found");
 	      return mrb_nil_value();
 	  }

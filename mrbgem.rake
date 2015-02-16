@@ -4,8 +4,7 @@ MRuby::Gem::Specification.new('mrgsl') do |spec|
 
 	spec.cc.flags << '-std=c99'
 	if ENV['OS'] == 'Windows_NT'
-		spec.cc.defines << 'ALLEGRO_STATICLINK'
-		spec.linker.libraries << %w(SDL2main SDL2 SDL2_image winmm gdi32 ole32 oleaut32 imm32 version turbojpeg jpeg png png12 glew32 opengl32 z)
+		spec.linker.libraries << %w(SDL2main SDL2 SDL2_image SDL2_ttf winmm gdi32 ole32 oleaut32 imm32 version turbojpeg jpeg png png12 freetype glew32 opengl32 z)
 		spec.linker.library_paths << Dir.glob("#{dir}/dependencies/win32/lib/")
 		spec.cc.include_paths << Dir.glob("#{dir}/dependencies/include/")
 	else

@@ -43,9 +43,10 @@ initialize (mrb_state *mrb, mrb_value self)
 static mrb_value
 set_z(mrb_state* mrb, mrb_value self){
   mrb_int z;
+  mrb_value parent;
   mrb_get_args(mrb, "i", &z);
   mrb_set_iv(mrb, self, "@z", mrb_fixnum_value(z));
-  mrb_value parent = mrb_get_iv(mrb, self, "@parent");
+  parent = mrb_get_iv(mrb, self, "@parent");
   mrb_set_iv (mrb, parent, "sorted?", mrb_false_value());
   return self;
 }
