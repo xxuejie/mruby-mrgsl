@@ -43,6 +43,10 @@ initialize (mrb_state *mrb, mrb_value self)
 	{
 	  const char *str = mrb_string_value_ptr (mrb, first);
 	  bitmap->surface = load_surface (str);
+	  if(bitmap->surface == NULL){
+	      mrb_raise (mrb, E_ARGUMENT_ERROR, "Asset not found");
+	      return mrb_nil_value();
+	  }
 	  bitmap->texture = surface_texture (bitmap->surface);
 	}
       else
