@@ -73,6 +73,7 @@ initialize (mrb_state* mrb, mrb_value self)
   mrb_set_iv (mrb, self, "@bold", mrb_false_value ());
   mrb_set_iv (mrb, self, "@italic", mrb_false_value ());
   mrb_set_iv (mrb, self, "@underline", mrb_false_value ());
+  TTF_SetFontStyle(font->font, TTF_STYLE_NORMAL);
   DATA_TYPE (self) = &mrbal_font_data_type;
   DATA_PTR (self) = font;
   return self;
@@ -84,21 +85,21 @@ set_bold (mrb_state *mrb, mrb_value self)
   /* Variables */
   int style;
   mrb_bool value;
-  TTF_Font *font;
+  mrgsl_font *font;
   /* Esto usa un argumento, de tipo booleano */
   mrb_get_args (mrb, "b", &value);
   /* Obtiene la estructura de C */
   font = DATA_PTR(self);
   /* Obtenemos el estilo anterior */
-  style = TTF_GetFontStyle (font);
+  style = TTF_GetFontStyle (font->font);
   /* Si la queres bold */
   if (value)
     {
-      TTF_SetFontStyle (font, style | TTF_STYLE_BOLD);
+      TTF_SetFontStyle (font->font, style |= TTF_STYLE_BOLD);
     }
   else
     { /* si no la queres bold */
-      TTF_SetFontStyle (font, style & (~TTF_STYLE_BOLD));
+      TTF_SetFontStyle (font->font, style & (~TTF_STYLE_BOLD));
     };
   mrb_set_iv (mrb, self, "@bold", mrb_bool_value (value));
   return value ? mrb_true_value () : mrb_false_value ();
@@ -110,21 +111,21 @@ set_italic (mrb_state *mrb, mrb_value self)
   /* Variables */
   int style;
   mrb_bool value;
-  TTF_Font *font;
+  mrgsl_font *font;
   /* Esto usa un argumento, de tipo booleano */
   mrb_get_args (mrb, "b", &value);
   /* Obtiene la estructura de C */
   font = DATA_PTR(self);
   /* Obtenemos el estilo anterior */
-  style = TTF_GetFontStyle (font);
+  style = TTF_GetFontStyle (font->font);
   /* Si la queres bold */
   if (value)
     {
-      TTF_SetFontStyle (font, style | TTF_STYLE_ITALIC);
+      TTF_SetFontStyle (font->font, style |= TTF_STYLE_ITALIC);
     }
   else
     { /* si no la queres bold */
-      TTF_SetFontStyle (font, style & (~TTF_STYLE_ITALIC));
+      TTF_SetFontStyle (font->font, style & (~TTF_STYLE_ITALIC));
     };
   mrb_set_iv (mrb, self, "@italic", mrb_bool_value (value));
   return value ? mrb_true_value () : mrb_false_value ();
@@ -137,21 +138,21 @@ set_underline (mrb_state *mrb, mrb_value self)
   /* Variables */
   int style;
   mrb_bool value;
-  TTF_Font *font;
+  mrgsl_font *font;
   /* Esto usa un argumento, de tipo booleano */
   mrb_get_args (mrb, "b", &value);
   /* Obtiene la estructura de C */
   font = DATA_PTR(self);
   /* Obtenemos el estilo anterior */
-  style = TTF_GetFontStyle (font);
+  style = TTF_GetFontStyle (font->font);
   /* Si la queres bold */
   if (value)
     {
-      TTF_SetFontStyle (font, style | TTF_STYLE_UNDERLINE);
+      TTF_SetFontStyle (font->font, style |= TTF_STYLE_UNDERLINE);
     }
   else
     { /* si no la queres bold */
-      TTF_SetFontStyle (font, style & (~TTF_STYLE_UNDERLINE));
+      TTF_SetFontStyle (font->font, style & (~TTF_STYLE_UNDERLINE));
     };
   mrb_set_iv (mrb, self, "@underline", mrb_bool_value (value));
   return value ? mrb_true_value () : mrb_false_value ();
@@ -164,21 +165,21 @@ set_strike (mrb_state *mrb, mrb_value self)
   /* Variables */
   int style;
   mrb_bool value;
-  TTF_Font *font;
+  mrgsl_font *font;
   /* Esto usa un argumento, de tipo booleano */
   mrb_get_args (mrb, "b", &value);
   /* Obtiene la estructura de C */
   font = DATA_PTR(self);
   /* Obtenemos el estilo anterior */
-  style = TTF_GetFontStyle (font);
+  style = TTF_GetFontStyle (font->font);
   /* Si la queres bold */
   if (value)
     {
-      TTF_SetFontStyle (font, style | TTF_STYLE_STRIKETHROUGH);
+      TTF_SetFontStyle (font->font, style |= TTF_STYLE_STRIKETHROUGH);
     }
   else
     { /* si no la queres bold */
-      TTF_SetFontStyle (font, style & (~TTF_STYLE_STRIKETHROUGH));
+      TTF_SetFontStyle (font->font, style & (~TTF_STYLE_STRIKETHROUGH));
     };
   mrb_set_iv (mrb, self, "@strike", mrb_bool_value (value));
   return value ? mrb_true_value () : mrb_false_value ();
