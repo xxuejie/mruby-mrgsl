@@ -43,7 +43,6 @@ initialize (mrb_state *mrb, mrb_value self)
 	  const char *str = mrb_string_value_ptr (mrb, first);
 	  bitmap->surface = load_surface (str);
 	  if(!bitmap->surface){
-	      printf("TTF_OpenFont: %s\n", TTF_GetError());
 	      mrb_raise (mrb, E_ARGUMENT_ERROR, "Asset not found");
 	      return mrb_nil_value();
 	  }
