@@ -17,7 +17,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
+/* #include <SDL2/SDL_ttf.h> */
 #include "mrgsl.h"
 #include "tools.h"
 
@@ -27,7 +27,7 @@ int
 create_window (int width, int height, const char* title)
 {
   SDL_Init(SDL_INIT_EVERYTHING);
-  TTF_Init();
+  /* TTF_Init(); */
   IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
   screen.width = width;
   screen.height = height;

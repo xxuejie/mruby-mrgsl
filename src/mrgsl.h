@@ -14,7 +14,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_video.h>
-#include <SDL2/SDL_ttf.h>
+/* #include <SDL2/SDL_ttf.h> */
 
 extern struct mrb_data_type const mrbal_bitmap_data_type;
 extern struct mrb_data_type const mrbal_font_data_type;
@@ -29,10 +29,10 @@ typedef struct
   GLuint texture;
 } mrgsl_bitmap;
 
-typedef struct
-{
-  TTF_Font* font;
-} mrgsl_font;
+/* typedef struct */
+/* { */
+/*   TTF_Font* font; */
+/* } mrgsl_font; */
 
 typedef struct
 {
